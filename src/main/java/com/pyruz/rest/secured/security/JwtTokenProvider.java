@@ -38,7 +38,7 @@ public class JwtTokenProvider {
     public String createToken(String username, User user) {
 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
-        user.getAccesses().forEach(group -> group.getMenus().forEach(menu -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(menu.getRole()))));
+        user.getAccesses().forEach(group -> group.getApis().forEach(menu -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(menu.getRole()))));
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", simpleGrantedAuthorities);
 

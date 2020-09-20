@@ -14,12 +14,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByUsernameIgnoreCase(String username);
-
     Optional<User> findUserByUsernameIgnoreCaseAndIsActiveIsTrue(String username);
-
     Boolean existsUserByUsernameIgnoreCase(String username);
-
     List<User> findAllByIsActiveIsTrue();
-
     Page<User> findAll(Pageable pageRequest);
 }

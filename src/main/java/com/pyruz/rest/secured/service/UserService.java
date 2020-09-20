@@ -125,9 +125,7 @@ public class UserService extends ApplicationContextHolder {
     }
 
     public BaseDTO userChangePassword(UserChangePasswordRequest userChangePasswordRequest, HttpServletRequest request) {
-
         User user = getUserEntity(request);
-
         if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.incorrectPassword.text"))
@@ -163,8 +161,6 @@ public class UserService extends ApplicationContextHolder {
                 .meta(MetaDTO.getInstance(applicationProperties))
                 .data(userMapper.UserToUserDTO(user)).build();
     }
-
-
 
     public User getUserEntity(String username) {
         Optional<User> user = userRepository.findUserByUsernameIgnoreCase(username.toLowerCase());

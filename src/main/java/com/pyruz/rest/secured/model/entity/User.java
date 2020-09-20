@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity<Long> {
+
     @Size(max = 50)
     private String username;
     @Size(max = 80)
@@ -28,7 +29,7 @@ public class User extends BaseEntity<Long> {
     private String lastName;
 
     @Where(clause = "is_deleted=false")
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_access",
             joinColumns = {@JoinColumn(name = "user_id")},

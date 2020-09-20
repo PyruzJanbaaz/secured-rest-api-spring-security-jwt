@@ -21,5 +21,5 @@ public class AccessUpdateRequest {
     private String title;
     @NotNull
     private Boolean isActive;
-    private List<Long> menuList;
+    private List<Long> apiIds;
 }

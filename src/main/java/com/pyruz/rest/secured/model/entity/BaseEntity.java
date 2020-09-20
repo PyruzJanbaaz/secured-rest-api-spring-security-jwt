@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public abstract class BaseEntity<T> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected T id;
     protected Timestamp createDate;
     protected Timestamp updateDate;

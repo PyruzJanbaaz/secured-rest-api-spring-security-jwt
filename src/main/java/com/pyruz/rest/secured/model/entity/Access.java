@@ -32,9 +32,9 @@ public class Access extends BaseEntity<Long> {
     @Where(clause = "is_deleted=false")
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinTable(
-            name = "access_menu",
+            name = "access_api",
             joinColumns = {@JoinColumn(name = "access_id")},
-            inverseJoinColumns = {@JoinColumn(name = "menu_id")}
+            inverseJoinColumns = {@JoinColumn(name = "api_id")}
     )
-    private List<Menu> menus;
+    private List<Api> apis;
 }

@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface AccessRepository extends JpaRepository<Access,Long> {
 
     Boolean existsAccessByTitleIgnoreCase(String title);
-    List<Access> findAllByIsActiveIsTrue();
     Page<Access> findAll(Pageable pageable);
     List<Access> findAccessByIdIn(List<Long> ids);
 

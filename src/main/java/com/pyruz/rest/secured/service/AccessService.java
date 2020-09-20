@@ -8,10 +8,10 @@ import com.pyruz.rest.secured.model.dto.AccessDTO;
 import com.pyruz.rest.secured.model.dto.BaseDTO;
 import com.pyruz.rest.secured.model.dto.MetaDTO;
 import com.pyruz.rest.secured.model.entity.Access;
-import com.pyruz.rest.secured.model.entity.Menu;
+import com.pyruz.rest.secured.model.entity.Api;
 import com.pyruz.rest.secured.model.mapper.AccessMapper;
 import com.pyruz.rest.secured.repository.AccessRepository;
-import com.pyruz.rest.secured.repository.MenuRepository;
+import com.pyruz.rest.secured.repository.ApiRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -23,10 +23,10 @@ import java.util.*;
 public class AccessService extends ApplicationContextHolder {
 
     final AccessRepository accessRepository;
-    final MenuRepository menuRepository;
+    final ApiRepository menuRepository;
     final AccessMapper accessMapper;
 
-    public AccessService(AccessRepository accessRepository, MenuRepository menuRepository, AccessMapper accessMapper) {
+    public AccessService(AccessRepository accessRepository, ApiRepository menuRepository, AccessMapper accessMapper) {
         this.accessRepository = accessRepository;
         this.menuRepository = menuRepository;
         this.accessMapper = accessMapper;
@@ -41,7 +41,7 @@ public class AccessService extends ApplicationContextHolder {
                     .build();
         }
         Access access = accessMapper.accessAddRequestToAccess(accessAddRequest);
-        access.setMenus(getAccessMenus(accessAddRequest.getMenuList()));
+        access.setApis(getAccessApi(accessAddRequest.getApiIds()));
         accessRepository.save(access);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))
@@ -58,7 +58,7 @@ public class AccessService extends ApplicationContextHolder {
                     .build();
         }
         access = accessMapper.accessUpdateRequestToAccess(access, accessUpdateRequest);
-        access.setMenus(getAccessMenus(accessUpdateRequest.getMenuList()));
+        access.setApis(getAccessApi(accessUpdateRequest.getApiIds()));
         accessRepository.save(access);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))
@@ -115,21 +115,11 @@ public class AccessService extends ApplicationContextHolder {
         return access.get();
     }
 
-    private List<Menu> getAccessMenus(List<Long> listIds) {
-        List<Menu> menus = null;
+    private List<Api> getAccessApi(List<Long> listIds) {
+        List<Api> apis = null;
         if (listIds != null && !listIds.isEmpty()) {
-            menus = menuRepository.findMenuByIdIn(listIds);
-            if (!menus.isEmpty()) {
-                List<Long> parents = new ArrayList<>();
-                menus.forEach(menu -> {
-                    if (menu.getParentId() != null && !parents.contains(menu.getParentId()))
-                        parents.add(menu.getParentId());
-                });
-                if (!parents.isEmpty())
-                    menus.addAll(menuRepository.findMenuByIdIn(parents));
-            }
+            apis = menuRepository.findApiByIdIn(listIds);
         }
-
-        return menus;
+        return apis;
     }
 }

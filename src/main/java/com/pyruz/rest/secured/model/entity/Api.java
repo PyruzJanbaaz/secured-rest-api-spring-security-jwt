@@ -10,11 +10,11 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="menu")
+@Table(name="api")
 @Where(clause="is_deleted= false")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu extends BaseEntity<Long> {
+public class Api extends BaseEntity<Long> {
 
     @Size(max=200)
     public String title;
@@ -22,21 +22,14 @@ public class Menu extends BaseEntity<Long> {
     @Size(max=40)
     public String role;
 
-    public Integer sort;
-
-    public Long parentId;
-
     @Size(max=1500)
-    public String urlAddress;
-
-    @Size(max = 50)
-    public String icon;
+    public String url;
 
     @Where(clause = "is_deleted=false")
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "access_menu",
-            joinColumns = {@JoinColumn(name = "menu_id")},
+            name = "access_api",
+            joinColumns = {@JoinColumn(name = "api_id")},
             inverseJoinColumns = {@JoinColumn(name = "access_id")}
     )
     private List<Access> accesses;

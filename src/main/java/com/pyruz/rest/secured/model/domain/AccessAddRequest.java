@@ -14,5 +14,5 @@ import java.util.List;
 public class AccessAddRequest {
     @NotBlank @Size(min = 3, max = 30)
     private String title;
-    private List<Long> menuList;
+    private List<Long> apiIds;
 }

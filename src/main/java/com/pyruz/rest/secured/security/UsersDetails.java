@@ -4,7 +4,7 @@ import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
 import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.exception.ServiceException;
 import com.pyruz.rest.secured.model.entity.User;
-import com.pyruz.rest.secured.repository.MenuRepository;
+import com.pyruz.rest.secured.repository.ApiRepository;
 import com.pyruz.rest.secured.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class UsersDetails extends ApplicationContextHolder implements UserDetail
 
     @Autowired private ApplicationProperties applicationProperties;
     @Autowired private UserRepository userRepository;
-    @Autowired private MenuRepository menuRepository;
+    @Autowired private ApiRepository apiRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -32,7 +32,7 @@ public class UsersDetails extends ApplicationContextHolder implements UserDetail
                     .httpStatus(HttpStatus.UNAUTHORIZED).build();
         }
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
-        List<String> result = menuRepository.findUserRoles(user.get().getId());
+        List<String> result = apiRepository.findUserRoles(user.get().getId());
         result.forEach(role -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role)));
 
         return org.springframework.security.core.userdetails.User
