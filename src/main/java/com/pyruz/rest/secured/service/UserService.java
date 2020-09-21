@@ -3,10 +3,10 @@ package com.pyruz.rest.secured.service;
 
 import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
 import com.pyruz.rest.secured.exception.ServiceException;
-import com.pyruz.rest.secured.model.domain.UserAddRequest;
-import com.pyruz.rest.secured.model.domain.UserChangePasswordRequest;
-import com.pyruz.rest.secured.model.domain.UserResetPasswordRequest;
-import com.pyruz.rest.secured.model.domain.UserUpdateRequest;
+import com.pyruz.rest.secured.model.domain.AddNewUserBean;
+import com.pyruz.rest.secured.model.domain.ChangePasswordBean;
+import com.pyruz.rest.secured.model.domain.ResetPasswordBean;
+import com.pyruz.rest.secured.model.domain.UpdateUserBean;
 import com.pyruz.rest.secured.model.dto.BaseDTO;
 import com.pyruz.rest.secured.model.dto.MetaDTO;
 import com.pyruz.rest.secured.model.dto.PageDTO;
@@ -69,21 +69,21 @@ public class UserService extends ApplicationContextHolder {
         }
     }
 
-    public BaseDTO addUser(UserAddRequest userAddRequest) {
-        userAddRequest.setUsername(userAddRequest.getUsername().toLowerCase());
-        if (!userAddRequest.getPassword().equals(userAddRequest.getConfirmPassword())) {
+    public BaseDTO addUser(AddNewUserBean addNewUserBean) {
+        addNewUserBean.setUsername(addNewUserBean.getUsername().toLowerCase());
+        if (!addNewUserBean.getPassword().equals(addNewUserBean.getConfirmPassword())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.passwordNotMatched.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
         }
-        if (userRepository.existsUserByUsernameIgnoreCase(userAddRequest.getUsername())) {
+        if (userRepository.existsUserByUsernameIgnoreCase(addNewUserBean.getUsername())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.duplicateUser.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
         }
-        User user = userMapper.UserAddRequestToUser(userAddRequest);
+        User user = userMapper.addNewUserBeanToUser(addNewUserBean);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccesses(getUserAccesses(userAddRequest.getAccessList()));
+        user.setAccesses(getUserAccesses(addNewUserBean.getAccessList()));
 
         userRepository.save(user);
         return BaseDTO.builder()
@@ -91,10 +91,10 @@ public class UserService extends ApplicationContextHolder {
                 .data(userMapper.UserToUserDTO(user)).build();
     }
 
-    public BaseDTO updateUser(UserUpdateRequest userUpdateRequest) {
-        User user = getUserEntity(userUpdateRequest.getId());
-        user = userMapper.UserUpdateRequestToUser(user, userUpdateRequest);
-        user.setAccesses(getUserAccesses(userUpdateRequest.getAccessList()));
+    public BaseDTO updateUser(UpdateUserBean updateUserBean) {
+        User user = getUserEntity(updateUserBean.getId());
+        user = userMapper.updateUserBeanToUser(user, updateUserBean);
+        user.setAccesses(getUserAccesses(updateUserBean.getAccessList()));
         userRepository.save(user);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))
@@ -110,32 +110,32 @@ public class UserService extends ApplicationContextHolder {
                 .data(userMapper.UserToUserDTO(user)).build();
     }
 
-    public BaseDTO userResetPassword(UserResetPasswordRequest userResetPasswordRequest) {
-        User user = getUserEntity(userResetPasswordRequest.getId());
-        if (!userResetPasswordRequest.getPassword().equals(userResetPasswordRequest.getConfirmPassword())) {
+    public BaseDTO userResetPassword(ResetPasswordBean resetPasswordBean) {
+        User user = getUserEntity(resetPasswordBean.getId());
+        if (!resetPasswordBean.getPassword().equals(resetPasswordBean.getConfirmPassword())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.passwordNotMatched.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
         }
-        user.setPassword(passwordEncoder.encode(userResetPasswordRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(resetPasswordBean.getPassword()));
         userRepository.save(user);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))
                 .data(userMapper.UserToUserDTO(user)).build();
     }
 
-    public BaseDTO userChangePassword(UserChangePasswordRequest userChangePasswordRequest, HttpServletRequest request) {
+    public BaseDTO userChangePassword(ChangePasswordBean changePasswordBean, HttpServletRequest request) {
         User user = getUserEntity(request);
-        if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(changePasswordBean.getOldPassword(), user.getPassword())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.incorrectPassword.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
-        } else if (!userChangePasswordRequest.getPassword().equals(userChangePasswordRequest.getConfirmPassword())) {
+        } else if (!changePasswordBean.getPassword().equals(changePasswordBean.getConfirmPassword())) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.passwordNotMatched.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
         } else {
-            user.setPassword(passwordEncoder.encode(userChangePasswordRequest.getPassword()));
+            user.setPassword(passwordEncoder.encode(changePasswordBean.getPassword()));
             userRepository.save(user);
 
             return BaseDTO.builder()

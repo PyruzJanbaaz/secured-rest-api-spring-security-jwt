@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserAddRequest {
+public class AddNewUserBean {
     @NotBlank @Size(min = 3,max = 50)
     @Pattern(regexp = "^[0-9a-zA-Z\\-_.@]{3,50}$", message = "application.message.usernameError.text")
     private String username;

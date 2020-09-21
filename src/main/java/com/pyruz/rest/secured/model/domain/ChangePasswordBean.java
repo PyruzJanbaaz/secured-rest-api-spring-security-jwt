@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserChangePasswordRequest {
+public class ChangePasswordBean {
     @NotBlank
     @Size(min = 5,max = 20)
     private String oldPassword;

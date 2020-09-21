@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccessAddRequest {
+public class AddNewAccessBean {
     @NotBlank @Size(min = 3, max = 30)
     private String title;
     private List<Long> apiIds;

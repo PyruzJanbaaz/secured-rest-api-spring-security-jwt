@@ -2,8 +2,8 @@ package com.pyruz.rest.secured.service;
 
 import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
 import com.pyruz.rest.secured.exception.ServiceException;
-import com.pyruz.rest.secured.model.domain.AccessAddRequest;
-import com.pyruz.rest.secured.model.domain.AccessUpdateRequest;
+import com.pyruz.rest.secured.model.domain.AddNewAccessBean;
+import com.pyruz.rest.secured.model.domain.UpdateAccessBean;
 import com.pyruz.rest.secured.model.dto.AccessDTO;
 import com.pyruz.rest.secured.model.dto.BaseDTO;
 import com.pyruz.rest.secured.model.dto.MetaDTO;
@@ -33,15 +33,15 @@ public class AccessService extends ApplicationContextHolder {
     }
 
 
-    public BaseDTO addAccess(AccessAddRequest accessAddRequest) {
-        if (accessRepository.existsAccessByTitleIgnoreCase(accessAddRequest.getTitle()).equals(true)) {
+    public BaseDTO addAccess(AddNewAccessBean addNewAccessBean) {
+        if (accessRepository.existsAccessByTitleIgnoreCase(addNewAccessBean.getTitle()).equals(true)) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.duplicateTitle.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        Access access = accessMapper.accessAddRequestToAccess(accessAddRequest);
-        access.setApis(getAccessApi(accessAddRequest.getApiIds()));
+        Access access = accessMapper.addNewAccessBeanToAccess(addNewAccessBean);
+        access.setApis(getAccessApi(addNewAccessBean.getApiIds()));
         accessRepository.save(access);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))
@@ -49,16 +49,16 @@ public class AccessService extends ApplicationContextHolder {
                 .build();
     }
 
-    public BaseDTO editAccess(AccessUpdateRequest accessUpdateRequest) {
-        Access access = getAccessEntity(accessUpdateRequest.getId());
-        if (!accessUpdateRequest.getTitle().equalsIgnoreCase(access.getTitle()) && accessRepository.existsAccessByTitleIgnoreCase(accessUpdateRequest.getTitle()).equals(true)) {
+    public BaseDTO editAccess(UpdateAccessBean updateAccessBean) {
+        Access access = getAccessEntity(updateAccessBean.getId());
+        if (!updateAccessBean.getTitle().equalsIgnoreCase(access.getTitle()) && accessRepository.existsAccessByTitleIgnoreCase(updateAccessBean.getTitle()).equals(true)) {
             throw ServiceException.builder()
                     .message(applicationProperties.getProperty("application.message.duplicateTitle.text"))
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        access = accessMapper.accessUpdateRequestToAccess(access, accessUpdateRequest);
-        access.setApis(getAccessApi(accessUpdateRequest.getApiIds()));
+        access = accessMapper.updateAccessBeanToAccess(access, updateAccessBean);
+        access.setApis(getAccessApi(updateAccessBean.getApiIds()));
         accessRepository.save(access);
         return BaseDTO.builder()
                 .meta(MetaDTO.getInstance(applicationProperties))

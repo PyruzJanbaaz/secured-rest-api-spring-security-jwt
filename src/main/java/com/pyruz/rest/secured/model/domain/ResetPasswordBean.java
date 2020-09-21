@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResetPasswordRequest {
+public class ResetPasswordBean {
     @NotNull
     private Long id;
     @NotBlank @Size(min = 8,max = 20)

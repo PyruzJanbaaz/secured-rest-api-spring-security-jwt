@@ -1,6 +1,7 @@
 package com.pyruz.rest.secured;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pyruz.rest.secured.model.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -19,5 +20,7 @@ public class SecuredRestAPIApplication {
     public Logger getLogger() {
         return LogManager.getLogger();
     }
+
+
 
 }
