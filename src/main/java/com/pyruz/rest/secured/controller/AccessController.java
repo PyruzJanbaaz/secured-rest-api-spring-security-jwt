@@ -23,7 +23,6 @@ public class AccessController {
         this.accessService = accessService;
     }
 
-
     @PreAuthorize("hasRole('ROLE_ACCESS')")
     @PostMapping(value = "v1/access", name = "Add new access")
     public ResponseEntity<?> addAccess(@Valid @RequestBody AddNewAccessBean addNewAccessBean) {

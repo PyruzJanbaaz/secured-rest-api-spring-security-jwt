@@ -1,7 +1,7 @@
 package com.pyruz.rest.secured.service;
 
 
-import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
+import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.exception.ServiceException;
 import com.pyruz.rest.secured.model.domain.AddNewUserBean;
 import com.pyruz.rest.secured.model.domain.ChangePasswordBean;
@@ -33,17 +33,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService extends ApplicationContextHolder {
+public class UserService  {
 
     final PasswordEncoder passwordEncoder;
+    final ApplicationProperties applicationProperties;
     final JwtTokenProvider jwtTokenProvider;
     final AuthenticationManager authenticationManager;
     final UserRepository userRepository;
     final UserMapper userMapper;
     final AccessRepository accessRepository;
 
-    public UserService(PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, UserRepository userRepository, UserMapper userMapper, AccessRepository accessRepository) {
+    public UserService(PasswordEncoder passwordEncoder, ApplicationProperties applicationProperties, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, UserRepository userRepository, UserMapper userMapper, AccessRepository accessRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.applicationProperties = applicationProperties;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;

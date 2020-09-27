@@ -1,6 +1,6 @@
 package com.pyruz.rest.secured.service;
 
-import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
+import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.exception.ServiceException;
 import com.pyruz.rest.secured.model.domain.AddNewAccessBean;
 import com.pyruz.rest.secured.model.domain.UpdateAccessBean;
@@ -17,16 +17,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-public class AccessService extends ApplicationContextHolder {
+public class AccessService {
 
+    final ApplicationProperties applicationProperties;
     final AccessRepository accessRepository;
     final ApiRepository menuRepository;
     final AccessMapper accessMapper;
 
-    public AccessService(AccessRepository accessRepository, ApiRepository menuRepository, AccessMapper accessMapper) {
+    public AccessService(ApplicationProperties applicationProperties, AccessRepository accessRepository, ApiRepository menuRepository, AccessMapper accessMapper) {
+        this.applicationProperties = applicationProperties;
         this.accessRepository = accessRepository;
         this.menuRepository = menuRepository;
         this.accessMapper = accessMapper;

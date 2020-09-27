@@ -1,4 +1,5 @@
 package com.pyruz.rest.secured.security;
+import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +24,12 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final JwtTokenProvider jwtTokenProvider;
+    final ApplicationProperties applicationProperties;
 
-    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider, ApplicationProperties applicationProperties) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.applicationProperties = applicationProperties;
     }
-
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -40,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-//                .antMatchers("/api/v*").permitAll()
+                //.antMatchers("/api/v*").permitAll()
                 .antMatchers("/api/v*/user/login").permitAll()
                 // -> Disallow everything else..
                 .anyRequest().authenticated()
@@ -70,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint(){
-        return new CustomAuthenticationEntryPoint();
+        return new CustomAuthenticationEntryPoint(applicationProperties);
     }
 
 }

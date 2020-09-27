@@ -1,0 +1,25 @@
+server:
+  port: 443
+  tomcat:
+    min-spare-threads: 50
+    max-threads: 1000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: postgres
+    password: !@154210%%#_KLM
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 30
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+
+property:
+    jwt:
+      token:
+        expire-length: 3600000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 milli seconds
+
+

@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+    #active: pro
+    include:  application-${spring.profiles.active}.yml
+      - jwt
+
+  dbcp2:
+    test-while-idle: true
+    validation-query: SELECT 1
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: true
+  main:
+    allow-bean-definition-overriding: true

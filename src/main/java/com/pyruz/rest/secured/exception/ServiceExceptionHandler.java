@@ -1,11 +1,13 @@
 package com.pyruz.rest.secured.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
+import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.model.dto.BaseDTO;
 import com.pyruz.rest.secured.model.dto.MetaDTO;
+import com.pyruz.rest.secured.security.JwtTokenProvider;
 import com.pyruz.rest.secured.utility.TypesHelper;
 import com.pyruz.rest.secured.utility.Utilities;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,17 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
-public class ServiceExceptionHandler extends ApplicationContextHolder {
+public class ServiceExceptionHandler {
+
+    final ApplicationProperties applicationProperties;
+    final JwtTokenProvider jwtTokenProvider;
+    final Logger logger;
+
+    public ServiceExceptionHandler(ApplicationProperties applicationProperties, Logger logger, JwtTokenProvider jwtTokenProvider) {
+        this.applicationProperties = applicationProperties;
+        this.logger = logger;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     // --> ServiceLevelValidation
     @ExceptionHandler(MethodArgumentNotValidException.class)

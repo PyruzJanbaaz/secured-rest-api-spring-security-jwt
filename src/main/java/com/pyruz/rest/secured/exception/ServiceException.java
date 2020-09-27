@@ -9,13 +9,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Builder
 public class ServiceException extends RuntimeException{
-
-    private Integer code;
     private String message;
     private HttpStatus httpStatus;
-
-    public ServiceException(Integer code, String message) {
-        this.code = code;
-        this.message = message;
-    }
 }

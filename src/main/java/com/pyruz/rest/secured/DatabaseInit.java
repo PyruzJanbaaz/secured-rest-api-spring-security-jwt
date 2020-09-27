@@ -76,7 +76,6 @@ public class DatabaseInit implements ApplicationRunner, ApplicationContextAware 
                 String value = "";
                 HttpMethods httpMethod;
 
-
                 if (method.isAnnotationPresent(PostMapping.class)) {
                     name = method.getAnnotation(PostMapping.class).name();
                     value = method.getAnnotation(PostMapping.class).value().length > 0 ? method.getAnnotation(PostMapping.class).value()[0] : "";
@@ -109,7 +108,7 @@ public class DatabaseInit implements ApplicationRunner, ApplicationContextAware 
                 }
                 if (method.isAnnotationPresent(PreAuthorize.class)) {
                     role = method.getAnnotation(PreAuthorize.class).value();
-                    int from = role.indexOf("'");
+                    int from = role.indexOf("'") + 1;
                     int to = role.lastIndexOf("'");
                     role = role.substring(from, to);
                 }

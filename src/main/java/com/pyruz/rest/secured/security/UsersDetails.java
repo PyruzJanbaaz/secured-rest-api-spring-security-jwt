@@ -1,6 +1,5 @@
 package com.pyruz.rest.secured.security;
 
-import com.pyruz.rest.secured.configuration.ApplicationContextHolder;
 import com.pyruz.rest.secured.configuration.ApplicationProperties;
 import com.pyruz.rest.secured.exception.ServiceException;
 import com.pyruz.rest.secured.model.entity.User;
@@ -17,11 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsersDetails extends ApplicationContextHolder implements UserDetailsService {
+public class UsersDetails implements UserDetailsService {
 
-    @Autowired private ApplicationProperties applicationProperties;
-    @Autowired private UserRepository userRepository;
-    @Autowired private ApiRepository apiRepository;
+    final ApplicationProperties applicationProperties;
+    final UserRepository userRepository;
+    final ApiRepository apiRepository;
+
+
+    public UsersDetails(ApplicationProperties applicationProperties, UserRepository userRepository, ApiRepository apiRepository) {
+        this.applicationProperties = applicationProperties;
+        this.userRepository = userRepository;
+        this.apiRepository = apiRepository;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) {
