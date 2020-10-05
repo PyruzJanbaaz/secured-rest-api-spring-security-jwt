@@ -1,9 +1,6 @@
 package com.pyruz.rest.secured.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -22,7 +19,7 @@ public class Access extends BaseEntity<Long> {
     @Size(max = 50)
     private String title;
 
-    @Where(clause = "is_deleted=false")
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_access",
@@ -31,7 +28,6 @@ public class Access extends BaseEntity<Long> {
     )
     private List<User> users;
 
-    @Where(clause = "is_deleted=false")
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinTable(
             name = "access_api",

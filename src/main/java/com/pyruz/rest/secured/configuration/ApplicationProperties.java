@@ -10,7 +10,9 @@ import javax.annotation.Resource;
 @Configuration
 @PropertySources({
         @PropertySource(name = "messages", value = "classpath:/messages-application.properties", encoding = "UTF-8", ignoreResourceNotFound = true),
-        @PropertySource(name = "messages", value = "classpath:/application.yml", encoding = "UTF-8", ignoreResourceNotFound = true)
+        @PropertySource(name = "application-dev", value = "classpath:/application-dev.yml", encoding = "UTF-8", ignoreResourceNotFound = true),
+        @PropertySource(name = "application-pro", value = "classpath:/application-pro.yml", encoding = "UTF-8", ignoreResourceNotFound = true),
+        @PropertySource(name = "application", value = "classpath:/application.yml", encoding = "UTF-8", ignoreResourceNotFound = true)
 })
 public class ApplicationProperties {
     @Resource

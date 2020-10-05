@@ -1,5 +1,5 @@
 server:
-  port: 5500
+  port: 9090
   tomcat:
     min-spare-threads: 50
     max-threads: 1000
@@ -12,7 +12,7 @@ spring:
       maximum-pool-size: 30
       minimum-idle: 30
   jpa:
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         temp.use_jdbc_metadata_defaults: false
@@ -20,6 +20,6 @@ spring:
 property:
     jwt:
       token:
-        expire-length: 3600000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 milli seconds
+        expire-length: 2600000
 
 

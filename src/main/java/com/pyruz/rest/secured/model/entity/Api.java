@@ -1,9 +1,6 @@
 package com.pyruz.rest.secured.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -17,7 +14,7 @@ import java.util.List;
 @Where(clause = "is_deleted= false")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Api extends BaseEntity<Long> {
+public class Api extends BaseEntity<Integer> {
 
     @Size(max = 200)
     public String title;
@@ -31,7 +28,7 @@ public class Api extends BaseEntity<Long> {
     @Size(max = 1500)
     public String url;
 
-    @Where(clause = "is_deleted=false")
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "access_api",

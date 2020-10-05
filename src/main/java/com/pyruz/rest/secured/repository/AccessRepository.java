@@ -18,5 +18,6 @@ public interface AccessRepository extends JpaRepository<Access,Long> {
     Boolean existsAccessByTitleIgnoreCase(String title);
     Page<Access> findAll(Pageable pageable);
     List<Access> findAccessByIdIn(List<Long> ids);
+    Access findAccessByTitle(String title);
 
 }

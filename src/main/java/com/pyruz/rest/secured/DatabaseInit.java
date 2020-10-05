@@ -1,7 +1,10 @@
 package com.pyruz.rest.secured;
 
+import com.pyruz.rest.secured.model.entity.Access;
 import com.pyruz.rest.secured.model.entity.Api;
+import com.pyruz.rest.secured.model.entity.User;
 import com.pyruz.rest.secured.model.enums.HttpMethods;
+import com.pyruz.rest.secured.repository.AccessRepository;
 import com.pyruz.rest.secured.repository.ApiRepository;
 import com.pyruz.rest.secured.repository.UserRepository;
 import org.springframework.beans.BeansException;
@@ -10,6 +13,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 public class DatabaseInit implements ApplicationRunner, ApplicationContextAware {
@@ -29,29 +34,54 @@ public class DatabaseInit implements ApplicationRunner, ApplicationContextAware 
 
     final UserRepository userRepository;
     final ApiRepository apiRepository;
+    final AccessRepository accessRepository;
+    final PasswordEncoder passwordEncoder;
 
-    public DatabaseInit(UserRepository userRepository, ApiRepository apiRepository) {
+    public DatabaseInit(UserRepository userRepository, ApiRepository apiRepository, AccessRepository accessRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.apiRepository = apiRepository;
+        this.accessRepository = accessRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        apiRepository.saveAll(apis);
+    public void run(ApplicationArguments args) {
+        //-> add APIs
+        List<Api> storedAPI = apiRepository.findAll();
+        storedAPI.forEach(api -> {
+                    api.setId(null);
+                    api.setAccesses(null);
+                    api.setCreateDate(null);
+                    api.setUpdateDate(null);
+                }
+        );
+        //-> set full authorities
+        List<Api> differences = apis.stream().filter(elem -> !storedAPI.contains(elem)).collect(Collectors.toList());
+        apiRepository.saveAll(differences);
 
-/*
-        Access access = Access.builder()
-                .apis()
-                .build();
-
-        User user = User.builder()
-                .firstName("Pyruz")
-                .lastName("Janbaaz")
-                .email("Pyruz.Janbaaz@gmail.com")
-                .accesses()
-                .build();
-*/
-
+        if (accessRepository.findAccessByTitle("Administrator") == null) {
+            Access access = Access.builder()
+                    .title("Administrator")
+                    .build();
+            accessRepository.save(access);
+            Access authorities = accessRepository.findAccessByTitle("Administrator");
+            authorities.setApis(differences);
+            accessRepository.save(authorities);
+        }
+        //-> add administrator user
+        if (!userRepository.existsUserByUsernameIgnoreCase("admin")) {
+            User user = User.builder()
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .firstName("Pyruz")
+                    .lastName("Janbaaz")
+                    .email("Pyruz.Janbaaz@gmail.com")
+                    .build();
+            userRepository.save(user);
+            User admin = userRepository.findUserByUsernameIgnoreCase("admin").get();
+            admin.setAccesses(accessRepository.findAll());
+            userRepository.save(admin);
+        }
     }
 
 

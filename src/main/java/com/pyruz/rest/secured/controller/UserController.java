@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 
 @RestController
 @Validated
+@RequestMapping("api/")
 public class UserController {
 
     final UserService userService;
@@ -66,7 +67,7 @@ public class UserController {
     @GetMapping(value = "v1/user/login" , name = "Login")
     public ResponseEntity login(
             @ApiParam(value = "admin", name = "username", required = true) @RequestParam @Size(min = 3,max = 50) String username,
-            @ApiParam(value = "123456", name = "password", required = true) @RequestParam @Size(min = 8,max = 20) String password) {
+            @ApiParam(value = "123456", name = "password", required = true) @RequestParam @Size(min = 3,max = 20) String password) {
         return new ResponseEntity(userService.login(username, password), HttpStatus.OK);
     }
 

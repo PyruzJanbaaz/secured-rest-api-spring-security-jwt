@@ -1,9 +1,6 @@
 package com.pyruz.rest.secured.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -30,7 +27,6 @@ public class User extends BaseEntity<Long> {
     @Size(max = 50)
     private String lastName;
 
-    @Where(clause = "is_deleted=false")
     @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_access",
