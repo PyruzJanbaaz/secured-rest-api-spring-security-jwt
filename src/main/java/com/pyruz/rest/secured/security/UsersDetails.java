@@ -5,12 +5,12 @@ import com.pyruz.rest.secured.exception.ServiceException;
 import com.pyruz.rest.secured.model.entity.User;
 import com.pyruz.rest.secured.repository.ApiRepository;
 import com.pyruz.rest.secured.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +40,10 @@ public class UsersDetails implements UserDetailsService {
         }
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
         List<String> result = apiRepository.findUserRoles(user.get().getId());
-        result.forEach(role -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role)));
+        result.forEach(role -> {
+            if (!role.trim().equals(""))
+                simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role));
+        });
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(username)
