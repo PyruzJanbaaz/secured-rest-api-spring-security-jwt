@@ -43,6 +43,8 @@ and dpendencies:
 	</dependency>
     
     
+Also I make properties files for development and deployment environment and set the profile in the application accordingly, so it will pick the respective properties file.
+    
 # Usage
-Run the project and go to http://localhost:8080 on your browser!
+Run the project and go to http://localhost:9090 on your browser!
 
